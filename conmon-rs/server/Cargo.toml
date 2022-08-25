@@ -15,7 +15,7 @@ conmon-common = { path = "../common" }
 clap = { version = "3.1.17", features = ["cargo", "derive", "env", "wrap_help"] }
 futures = "0.3.23"
 getset = "0.1.2"
-serde = { version = "1.0.143", features = ["derive"] }
+serde = { version = "1.0.144", features = ["derive"] }
 tokio = { version = "1.20.1", features = ["fs", "io-std", "io-util", "macros", "net", "process", "rt", "rt-multi-thread", "signal", "time"] }
 tokio-util = { version = "0.7.3", features = ["compat"] }
 nix = "0.25.0"
@@ -25,7 +25,7 @@ tempfile = "3.3.0"
 sendfd = { version = "0.4.3", features = ["tokio"] }
 prctl = "1.0.0"
 strum = { version = "0.24.1", features = ["derive"] }
-shadow-rs = "0.16.2"
+shadow-rs = "0.16.3"
 multimap = "0.8.3"
 tracing = "0.1.36"
 tracing-journald = "0.3.0"
@@ -39,8 +39,8 @@ tz-rs = "0.6.14"
 tokio-fd = "0.3.0"
 
 [build-dependencies]
-shadow-rs = "0.16.2"
+shadow-rs = "0.16.3"
 
 [dev-dependencies]
 mockall = "0.11.2"
-time = { version = "0.3.13", features = ["parsing"] }
+time = { version = "0.3.14", features = ["parsing"] }
