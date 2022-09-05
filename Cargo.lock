@@ -247,7 +247,7 @@ dependencies = [
 
 [[package]]
 name = "conmon-common"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "capnp",
  "capnpc",
@@ -255,7 +255,7 @@ dependencies = [
 
 [[package]]
 name = "conmonrs"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anyhow",
  "capnp",
@@ -292,7 +292,7 @@ dependencies = [
 
 [[package]]
 name = "conmonrs-cli"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "async-io",
  "async-net",
@@ -1382,9 +1382,9 @@ checksum = "cda74da7e1a664f795bb1f8a87ec406fb89a02522cf6e50620d016add6dbbf5c"
 
 [[package]]
 name = "tokio"
-version = "1.20.1"
+version = "1.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7a8325f63a7d4774dd041e363b2409ed1c5cbbd0f867795e661df066b2b0a581"
+checksum = "89797afd69d206ccd11fb0ea560a44bbb87731d020670e79416d442919257d42"
 dependencies = [
  "autocfg",
  "bytes",
