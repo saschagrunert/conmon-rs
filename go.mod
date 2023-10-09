@@ -8,7 +8,7 @@ require (
 	github.com/containers/common v0.55.4
 	github.com/containers/storage v1.49.0
 	github.com/google/uuid v1.3.1
-	github.com/onsi/ginkgo/v2 v2.12.0
+	github.com/onsi/ginkgo/v2 v2.13.0
 	github.com/onsi/gomega v1.27.10
 	github.com/opencontainers/runc v1.1.9
 	github.com/opencontainers/runtime-tools v0.9.1-0.20230317050512-e931285f4b69
@@ -36,7 +36,7 @@ require (
 	go.opentelemetry.io/otel/metric v1.17.0 // indirect
 	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
-	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.12.0 // indirect
 	golang.org/x/tools v0.12.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
