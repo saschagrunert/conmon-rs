@@ -1,0 +1,60 @@
+name: cargo-upgrade
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'  # At 00:00 on Sunday
+  push:
+    branches:
+      - dep-update
+env:
+  CARGO_TERM_COLOR: always
+  ACTION_MSRV_TOOLCHAIN: 1.66.1
+jobs:
+  upgrade:
+    #if: github.ref == 'refs/heads/main' && github.repository == 'containers/conmon-rs'
+    permissions:
+      contents: write
+      pull-requests: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Select Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+          override: true
+      - name: Install cargo-edit
+        run: cargo install cargo-edit
+      - name: Upgrade
+        run: |
+          mv .cargo .tmp
+          cargo upgrade --rust-version=$ACTION_MSRV_TOOLCHAIN
+          mv .tmp .cargo
+          cargo vendor
+      - name: Check workspace
+        id: create_pr
+        run: |
+          if [[ $(git diff --stat) != '' ]]; then
+            echo "create_pr=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Create PR if required
+        uses: peter-evans/create-pull-request@v6
+        if: ${{ steps.create_pr.outputs.create_pr == 'true' }}
+        with:
+          commit-message: Update cargo dependencies
+          title: 'Update cargo dependencies'
+          body: Update cargo dependencies.
+          labels: kind/ci, release-note-none, ok-to-test
+          branch: cargo-deps
+          delete-branch: true
+          signoff: true
