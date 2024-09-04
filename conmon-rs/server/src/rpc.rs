@@ -6,6 +6,7 @@ use crate::{
     pause::Pause,
     server::{GenerateRuntimeArgs, Server},
     telemetry::Telemetry,
+    terminal::NoFileDescriptorError,
     version::Version,
 };
 use anyhow::{format_err, Context};
@@ -161,6 +162,12 @@ impl conmon::Server for Server {
                     .await
                 {
                     Err(e) => {
+                        // Handle tty file descriptor receive issues, for example if the runtime
+                        // command was not found
+                        if e.downcast_ref::<NoFileDescriptorError>().is_some() {
+                            return capnp_err!(Err(e));
+                        }
+
                         // Attach the stderr output to the error message
                         let (_, stderr, _) =
                             capnp_err!(container_io.read_all_with_timeout(None).await)?;

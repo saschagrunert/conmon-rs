@@ -15,6 +15,7 @@ use nix::{
 };
 use sendfd::RecvWithFd;
 use std::{
+    fmt::{self, Display, Formatter},
     io::{self, ErrorKind, Read, Write},
     os::{
         fd::{AsFd, AsRawFd, BorrowedFd, FromRawFd, OwnedFd},
@@ -40,7 +41,7 @@ pub struct Terminal {
     #[getset(get = "pub")]
     path: PathBuf,
 
-    connected_rx: Receiver<OwnedFd>,
+    connected_rx: Receiver<Option<OwnedFd>>,
 
     #[getset(get = "pub", get_mut = "pub")]
     message_rx: Option<UnboundedReceiver<Message>>,
@@ -61,7 +62,17 @@ struct Config {
     ready_tx: StdSender<()>,
 
     #[get]
-    connected_tx: Sender<OwnedFd>,
+    connected_tx: Sender<Option<OwnedFd>>,
+}
+
+#[derive(Debug, Clone)]
+/// Error for not being able to receive a terminal file descriptor.
+pub(crate) struct NoFileDescriptorError;
+
+impl Display for NoFileDescriptorError {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "got no file descriptor")
+    }
 }
 
 impl Terminal {
@@ -107,7 +118,8 @@ impl Terminal {
             .connected_rx
             .recv()
             .await
-            .context("receive connected channel")?;
+            .context("receive connected channel")?
+            .context(NoFileDescriptorError)?;
         let fd = Arc::new(TerminalFd::new(fd)?);
         self.set_tty(Arc::downgrade(&fd).into());
 
@@ -223,10 +235,6 @@ impl Terminal {
                     if fd.is_none() {
                         error!("No file descriptor received");
                     }
-
-                    let fd = fd.context("got no file descriptor")?;
-
-                    debug!("Received terminal file descriptor");
 
                     config
                         .connected_tx
